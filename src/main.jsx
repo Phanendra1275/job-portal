@@ -6,9 +6,15 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { shadesOfPurple } from "@clerk/themes";
 import ErrorBoundary from "./components/error-boundary";
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const PUBLISHABLE_KEY =
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ||
+  "pk_test_d2FybS1jaGVldGFoLTk1NjMuY2xlcmsuYWNjb3VudHMuZGV2JA";
+const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL ||
+  "https://efkdzlycubfhhkqogbej.supabase.co";
+const SUPABASE_ANON_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVma2R6bHljdWJmaGhrcW9nYmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MjY3OTcsImV4cCI6MjEwODUwMjc5N30.viKnYdfb-gJNKsYj_D1CZSu6U-OF7TutwWt5EvK76Dg";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
