@@ -72,6 +72,19 @@ const AddCompanyDrawer = ({ fetchCompanies }) => {
         <DrawerHeader>
           <DrawerTitle>Add a New Company</DrawerTitle>
         </DrawerHeader>
+
+        {/* Instruction to remove background */}
+        <div className="px-4 pb-2">
+          <div className="text-xs sm:text-sm bg-blue-950/50 border border-blue-800/70 text-blue-200 p-3 rounded-lg flex flex-col gap-1">
+            <span className="font-semibold text-white flex items-center gap-1.5">
+              💡 Pro Tip: Upload a Transparent Background Logo
+            </span>
+            <p className="text-gray-300 text-xs leading-relaxed">
+              To make your logo look stunning on the dark theme and the homepage scrolling carousel, please upload an image with a <strong>transparent background</strong> (PNG/SVG). You can quickly remove your background using <a href="https://www.remove.bg/" target="_blank" rel="noopener noreferrer" className="text-blue-400 font-semibold underline hover:text-blue-300">remove.bg</a> before uploading.
+            </p>
+          </div>
+        </div>
+
         <form className="flex gap-2 p-4 pb-0">
           {/* Company Name */}
           <Input placeholder="Company name" {...register("name")} />

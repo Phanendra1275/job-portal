@@ -6,7 +6,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import companies from "../data/companies.json";
+import defaultCompanies from "../data/companies.json";
 import faqs from "../data/faq.json";
 import {
   Accordion,
@@ -15,8 +15,63 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import supabaseClient from "@/utils/supabase";
 
 const LandingPage = () => {
+  const [companiesList, setCompaniesList] = useState(defaultCompanies);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const supabase = await supabaseClient();
+        const { data: dbCompanies, error } = await supabase
+          .from("companies")
+          .select("id, name, logo_url");
+
+        if (error) {
+          console.error("Error fetching companies for carousel:", error);
+          return;
+        }
+
+        if (dbCompanies && dbCompanies.length > 0) {
+          const validDbCompanies = dbCompanies
+            .filter((c) => c.logo_url && !c.logo_url.endsWith(".txt"))
+            .map((c) => ({
+              id: `supabase-${c.id}`,
+              name: c.name,
+              path: c.logo_url,
+            }));
+
+          const seen = new Set();
+          const merged = [];
+
+          for (const comp of validDbCompanies) {
+            const lowerName = comp.name.trim().toLowerCase();
+            if (!seen.has(lowerName)) {
+              seen.add(lowerName);
+              merged.push(comp);
+            }
+          }
+
+          for (const comp of defaultCompanies) {
+            const lowerName = comp.name.trim().toLowerCase();
+            if (!seen.has(lowerName)) {
+              seen.add(lowerName);
+              merged.push(comp);
+            }
+          }
+
+          setCompaniesList(merged);
+        }
+      } catch (err) {
+        console.error("Error loading carousel companies:", err);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   return (
     <main className="flex flex-col gap-10 sm:gap-20 py-10 sm:py-20">
       <section className="text-center ">
@@ -53,10 +108,14 @@ const LandingPage = () => {
             delay: 2000,
           }),
         ]}
+        opts={{
+          loop: true,
+          align: "start",
+        }}
         className="w-full py-10"
       >
         <CarouselContent className="flex gap-5 sm:gap-20 items-center">
-          {companies.map(({ name, id, path }) => (
+          {companiesList.map(({ name, id, path }) => (
             <CarouselItem key={id} className="basis-1/3 lg:basis-1/6 ">
               <img
                 src={path}
@@ -68,7 +127,15 @@ const LandingPage = () => {
         </CarouselContent>
       </Carousel>
 
-      <img src="/banner.jpeg" className="w-full" />
+      <div className="w-full flex justify-center">
+        <div className="w-full max-w-2xl sm:max-w-3xl relative">
+          <img
+            src="/banner.jpeg"
+            alt="Hirrd Banner"
+            className="w-full rounded-2xl sm:rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(59,130,246,0.15)] drop-shadow-2xl border border-white/10"
+          />
+        </div>
+      </div>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
